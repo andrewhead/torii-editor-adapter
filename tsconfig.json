@@ -14,6 +14,10 @@
                 "node_modules/*",
                 "src/types/*"
             ]
-        }
-    }
+        },
+    },
+    "exclude": [
+      "**/test/**/*.test.ts",
+      "dist"
+    ]
 }

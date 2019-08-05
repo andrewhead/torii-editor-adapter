@@ -1,28 +1,39 @@
-import { Message } from "../src/editor-connector";
-import { SimpleEditorAdapter } from './test-utils';
+import configureStore from "redux-mock-store";
+import { actions } from "santoku-store";
+import { SimpleEditorAdapter } from "./test-utils";
+import { ACTION_MESSAGE, Message, STATE_UPDATED_MESSAGE } from "../src/message";
+import { EditorAdapter } from "../src/editor-adapter";
 
 describe("EditorAdaptor", () => {
-  const saveLastSentMessage = function(message: Message) {
-    this._lastSentMessage = message;
-  };
+  it("dispatches actions to the store", () => {
+    const location = { path: "path", index: 0 };
+    const version = 0;
+    const text = "Updated text";
+    const action = actions.line.updateTextAtLocation(location, text, version);
+    const message = { type: ACTION_MESSAGE, data: action };
 
-  it("sends a message when a step has been added", () => {
-    const editorAdapter = new SimpleEditorAdapter(saveLastSentMessage);
-    editorAdapter.sendStepAddedEvent(0, { linesAdded: [], linesRemoved: [] }, []);
-    expect(editorAdapter.lastSentMessage).toEqual({
-      type: 'step-added',
-      data: {
-        index: 0,
-        step: {
-          linesAdded: [],
-          linesRemoved: [],
-        },
-        lines: []
-      }
-    })
+    const mockStore = configureStore([]);
+    const store = mockStore({});
+    const editorAdapter = new SimpleEditorAdapter(store);
+    editorAdapter.notify(message);
+
+    expect(store.getActions()).toEqual([action]);
   });
 
-  it("changes a line", () => {
-
+  it("reports state changes", (done) => {
+    const mockStore = configureStore([]);
+    const store = mockStore({
+      field: "value"
+    });
+    new EditorAdapter(store, (message: Message) => {
+      expect(message).toEqual({
+        type: STATE_UPDATED_MESSAGE,
+        data: {
+          field: "value"
+        }
+      })
+      done();
+    });
+    store.dispatch({ type: "noop-action" });
   });
 });

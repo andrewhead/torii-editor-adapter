@@ -1,13 +1,5 @@
 import { EditorAdapter } from "./editor-adapter";
-
-/**
- * Message sent from Santoku to the editor, or vice versa.
- * It's assumed that any data placed in the 'data' filed is JSON-serializable.
- */
-export interface Message {
-  type: string,
-  data: any
-};
+import { Message } from "./message";
 
 export type MessageListenerSetup = (handleMessage: (message: Message) => void) => void;
 
@@ -15,7 +7,7 @@ export type MessageListenerSetup = (handleMessage: (message: Message) => void) =
  * Connector that handles communication with a code editor.
  * @param messageListenerSetup custom logic to set up listener for messages from the editor (e.g.,
  * listen to WebSockets). Should decode the message into a 'Message' type, and then
- * call 'handleMessage' with it. 
+ * call 'handleMessage' with it.
  */
 export abstract class EditorConnector {
   constructor(adapter: EditorAdapter, messageListener: MessageListenerSetup) {

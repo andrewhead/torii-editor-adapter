@@ -1,14 +1,19 @@
-import { State } from "santoku-store";
+import { Store } from "redux";
+import configureStore from 'redux-mock-store';
 import { EditorAdapter } from "../src/editor-adapter";
-import { Message } from "../src/editor-connector";
+import { Message } from "../src/message";
 
 export class SimpleEditorAdapter extends EditorAdapter {
 
-  constructor(sendMessageHandler?: (message: Message) => void) {
-    super(emptyStore, sendMessageHandler);
+  constructor(store?: Store) {
+    store = store || configureStore([])({});
+    super(store, (message: Message) => {
+      this._lastSentMessage = message;
+    });
   }
 
   notify(message: Message) {
+    super.notify(message);
     this._lastReceivedMessage = message;
   }
 
@@ -23,18 +28,3 @@ export class SimpleEditorAdapter extends EditorAdapter {
   private _lastSentMessage: Message;
   private _lastReceivedMessage: Message;
 }
-
-const emptyStore: State = {
-  lineVersions: {
-    allLineVersions: [],
-    byId: {}
-  },
-  lines: {
-    allLines: [],
-    byId: {}
-  },
-  steps: {
-    allSteps: [],
-    byId: {}
-  }
-};
