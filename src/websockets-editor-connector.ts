@@ -1,5 +1,5 @@
-import { EditorConnector, Message } from "./editor-connector";
-import { EditorAdapter } from "./editor-adapter";
+import { EditorConnector } from "./editor-connector";
+import { Message } from "./message";
 
 const setupWebSocketsListener = (handleMessage: (message: Message) => void) => {
   window.addEventListener("message", (event) => {
@@ -15,8 +15,8 @@ export class WebSocketsEditorConnector extends EditorConnector {
    * (i.e. it's getting run in an IDE, not a browser. See the targetOrigin parameter description on
    * MDN https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
    */
-  constructor(editorAdapter: EditorAdapter, targetOrigin: string) {
-    super(editorAdapter, setupWebSocketsListener);
+  constructor(targetOrigin: string) {
+    super(setupWebSocketsListener);
     this._targetOrigin = targetOrigin;
   }
 

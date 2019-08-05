@@ -1,8 +1,8 @@
 import configureStore from "redux-mock-store";
 import { actions } from "santoku-store";
-import { SimpleEditorAdapter } from "./test-utils";
-import { ACTION_MESSAGE, Message, STATE_UPDATED_MESSAGE } from "../src/message";
 import { EditorAdapter } from "../src/editor-adapter";
+import { ACTION_MESSAGE, STATE_UPDATED_MESSAGE } from "../src/message";
+import { SimpleEditorAdapter, SimpleEditorConnector } from "./test-utils";
 
 describe("EditorAdaptor", () => {
   it("dispatches actions to the store", () => {
@@ -14,26 +14,24 @@ describe("EditorAdaptor", () => {
 
     const mockStore = configureStore([]);
     const store = mockStore({});
-    const editorAdapter = new SimpleEditorAdapter(store);
-    editorAdapter.notify(message);
+    const connector = new SimpleEditorConnector();
+    new SimpleEditorAdapter(store, connector);
+    connector.triggerIncomingMessage(message);
 
     expect(store.getActions()).toEqual([action]);
   });
 
-  it("reports state changes", (done) => {
+  it("reports state changes", () => {
     const mockStore = configureStore([]);
-    const store = mockStore({
-      field: "value"
-    });
-    new EditorAdapter(store, (message: Message) => {
-      expect(message).toEqual({
-        type: STATE_UPDATED_MESSAGE,
-        data: {
-          field: "value"
-        }
-      })
-      done();
-    });
+    const store = mockStore({ field: "value" });
+    let connector = new SimpleEditorConnector();
+    new EditorAdapter(store, connector);
     store.dispatch({ type: "noop-action" });
+    expect(connector.lastSentMessage).toEqual({
+      type: STATE_UPDATED_MESSAGE,
+      data: {
+        field: "value"
+      }
+    });
   });
 });
