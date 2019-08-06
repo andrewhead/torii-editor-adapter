@@ -1,9 +1,8 @@
 import { Store } from "redux";
 import configureStore from 'redux-mock-store';
 import { EditorAdapter } from "../src/editor-adapter";
+import { EditorConnector, MessageListenerSetup } from "../src/editor-connector";
 import { Message } from "../src/message";
-import { EditorConnector } from "../src/editor-connector";
-import { MessageListenerSetup } from "../src/editor-connector";
 
 export class SimpleEditorConnector extends EditorConnector {
   constructor(listenerSetup?: MessageListenerSetup) {

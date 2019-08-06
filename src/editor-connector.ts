@@ -5,12 +5,12 @@ export type MessageListenerSetup = (handleMessage: (message: Message) => void) =
 export type Subscription = () => void;
 
 /**
- * Connector that handles communication with a code editor.
- * @param messageListenerSetup custom logic to set up listener for receiving messages from the editor
- * (e.g., listen to WebSockets). Should decode the message into a 'Message' type, and then
- * call 'handleMessage' with it.
+ * Connector that enables communication between editor and Santoku.
+ * @param messageListenerSetup custom logic to set up listener for receiving messages from a sender
+ * (e.g., listen to WebSockets, or to a callback from a webview). Should decode the message into
+ * a 'Message' type, and then call 'handleMessage' with it.
  */
-export abstract class EditorConnector {
+abstract class Connector {
   constructor(messageListener: MessageListenerSetup) {
     messageListener(this._handleMessage.bind(this));
   }
@@ -35,9 +35,20 @@ export abstract class EditorConnector {
   }
 
   /**
-   * Custom logic for sending data to the editor (e.g., over WebSockets).
+   * Custom logic for sending data to a receiver (e.g., sending to an editor over WebSockets, or
+   * sending to Santoku through webview functions).
    */
   abstract sendMessage(message: Message): void;
 
   private _listeners: ((message: Message) => void)[] = [];
 }
+
+/**
+ * A connector that communicates with an editor from Santoku.
+ */
+export abstract class EditorConnector extends Connector {}
+
+/**
+ * A connector that communicates with Santoku from an editor.
+ */
+export abstract class SantokuConnector extends Connector {}
