@@ -1,4 +1,4 @@
-import { EditorConnector } from "./editor-connector";
+import { EditorConnector } from "./connector";
 import { Message } from "./message";
 
 const setupWebSocketsListener = (handleMessage: (message: Message) => void) => {

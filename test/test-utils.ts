@@ -1,10 +1,10 @@
 import { Store } from "redux";
 import configureStore from 'redux-mock-store';
 import { EditorAdapter } from "../src/editor-adapter";
-import { EditorConnector, MessageListenerSetup } from "../src/editor-connector";
+import { EditorConnector, MessageListenerSetup, Connector, EDITOR_CONNECTOR } from "../src/connector";
 import { Message } from "../src/message";
 
-export class SimpleEditorConnector extends EditorConnector {
+abstract class TestConnector extends Connector {
   constructor(listenerSetup?: MessageListenerSetup) {
     super(listenerSetup || (() => {}));
     this.triggerIncomingMessage = (message) => {
@@ -22,6 +22,14 @@ export class SimpleEditorConnector extends EditorConnector {
 
   triggerIncomingMessage: (message: Message) => void;
   private _lastSentMessage: Message;
+}
+
+export class SimpleConnector extends TestConnector {
+  type: "SIMPLE_CONNECTOR";
+}
+
+export class SimpleEditorConnector extends TestConnector {
+  type: typeof EDITOR_CONNECTOR;
 }
 
 export class SimpleEditorAdapter extends EditorAdapter {

@@ -1,5 +1,5 @@
 import { Store } from "redux";
-import { EditorConnector } from "./editor-connector";
+import { EditorConnector } from "./connector";
 import { ACTION_MESSAGE, Message, stateUpdateMessage } from "./message";
 
 /**

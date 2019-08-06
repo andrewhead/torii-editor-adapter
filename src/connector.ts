@@ -10,7 +10,7 @@ export type Subscription = () => void;
  * (e.g., listen to WebSockets, or to a callback from a webview). Should decode the message into
  * a 'Message' type, and then call 'handleMessage' with it.
  */
-abstract class Connector {
+export abstract class Connector {
   constructor(messageListener: MessageListenerSetup) {
     messageListener(this._handleMessage.bind(this));
   }
@@ -40,15 +40,23 @@ abstract class Connector {
    */
   abstract sendMessage(message: Message): void;
 
+  abstract type: string;
   private _listeners: ((message: Message) => void)[] = [];
 }
+
+export const EDITOR_CONNECTOR = "EDITOR_CONNECTOR";
+export const SANTOKU_CONNECTOR = "SANTOKU_CONNECTOR";
 
 /**
  * A connector that communicates with an editor from Santoku.
  */
-export abstract class EditorConnector extends Connector {}
+export abstract class EditorConnector extends Connector {
+  type: typeof EDITOR_CONNECTOR;
+}
 
 /**
  * A connector that communicates with Santoku from an editor.
  */
-export abstract class SantokuConnector extends Connector {}
+export abstract class SantokuConnector extends Connector {
+  type: typeof SANTOKU_CONNECTOR;
+}
