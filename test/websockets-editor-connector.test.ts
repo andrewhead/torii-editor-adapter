@@ -1,5 +1,6 @@
 import { Message } from "../src/message";
 import { WebSocketsEditorConnector } from "../src/websockets-editor-connector";
+import { simpleMessage } from "./test-utils";
 
 describe("WebSocketsEditorConnector", () => {
   it("sends a message to a window", () => {
@@ -9,8 +10,8 @@ describe("WebSocketsEditorConnector", () => {
       messageSent = message;
     };
     const connector = new WebSocketsEditorConnector("*");
-    connector.sendMessage({ type: "example-type", data: {} });
-    expect(messageSent).toEqual({ type: "example-type", data: {} });
+    connector.sendMessage(simpleMessage("message-id"));
+    expect(messageSent).toMatchObject({ id: "message-id" });
     window.postMessage = oldPostMessage;
   });
 

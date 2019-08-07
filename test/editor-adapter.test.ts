@@ -1,7 +1,7 @@
 import configureStore from "redux-mock-store";
 import { actions } from "santoku-store";
 import { EditorAdapter } from "../src/editor-adapter";
-import { ACTION_MESSAGE, STATE_UPDATED_MESSAGE } from "../src/message";
+import { actionMessage, STATE_UPDATED_MESSAGE } from "../src/message";
 import { SimpleEditorAdapter, SimpleEditorConnector } from "./test-utils";
 
 describe("EditorAdaptor", () => {
@@ -10,7 +10,7 @@ describe("EditorAdaptor", () => {
     const version = 0;
     const text = "Updated text";
     const action = actions.line.updateTextAtLocation(location, text, version);
-    const message = { type: ACTION_MESSAGE, data: action };
+    const message = actionMessage(action);
 
     const mockStore = configureStore([]);
     const store = mockStore({});
@@ -27,7 +27,7 @@ describe("EditorAdaptor", () => {
     let connector = new SimpleEditorConnector();
     new EditorAdapter(store, connector);
     store.dispatch({ type: "noop-action" });
-    expect(connector.lastSentMessage).toEqual({
+    expect(connector.lastSentMessage).toMatchObject({
       type: STATE_UPDATED_MESSAGE,
       data: {
         field: "value"

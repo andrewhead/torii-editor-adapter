@@ -1,8 +1,21 @@
 import { Store } from "redux";
 import configureStore from 'redux-mock-store';
 import { EditorAdapter } from "../src/editor-adapter";
-import { EditorConnector, MessageListenerSetup, Connector, EDITOR_CONNECTOR } from "../src/connector";
-import { Message } from "../src/message";
+import { EditorConnector, MessageListenerSetup, Connector, EDITOR_CONNECTOR, SANTOKU_CONNECTOR } from "../src/connector";
+import { Message, MessageId } from "../src/message";
+import { State } from "santoku-store";
+
+export function simpleMessage(messageId: MessageId) {
+  return { id: messageId, type: "test", data: {} };
+}
+
+export function emptyState(): State {
+  return {
+    lineVersions: { allLineVersions: [], byId: {} },
+    lines: { allLines: [], byId: {} },
+    steps: { allSteps: [], byId: {} }
+  };
+}
 
 abstract class TestConnector extends Connector {
   constructor(listenerSetup?: MessageListenerSetup) {
@@ -16,7 +29,7 @@ abstract class TestConnector extends Connector {
     return this._lastSentMessage;
   }
 
-  sendMessage(message: Message) {
+  _sendMessage(message: Message) {
     this._lastSentMessage = message;
   }
 
@@ -30,6 +43,10 @@ export class SimpleConnector extends TestConnector {
 
 export class SimpleEditorConnector extends TestConnector {
   type: typeof EDITOR_CONNECTOR;
+}
+
+export class SimpleSantokuConnector extends TestConnector {
+  type: typeof SANTOKU_CONNECTOR;
 }
 
 export class SimpleEditorAdapter extends EditorAdapter {

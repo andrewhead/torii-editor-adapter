@@ -1,11 +1,12 @@
-import { Message } from "./message";
+import { Message, RECEIPT_MESSAGE, receiptMessage, MessageId } from "./message";
 
 export type MessageListener = (message: Message) => void;
 export type MessageListenerSetup = (handleMessage: (message: Message) => void) => void;
 export type Subscription = () => void;
 
 /**
- * Connector that enables communication between editor and Santoku.
+ * Connector that enables communication between editor and Santoku. Sends receipts whenever a
+ * message that it receives has been handled.
  * @param messageListenerSetup custom logic to set up listener for receiving messages from a sender
  * (e.g., listen to WebSockets, or to a callback from a webview). Should decode the message into
  * a 'Message' type, and then call 'handleMessage' with it.
@@ -13,6 +14,18 @@ export type Subscription = () => void;
 export abstract class Connector {
   constructor(messageListener: MessageListenerSetup) {
     messageListener(this._handleMessage.bind(this));
+  }
+
+  /**
+   * Public method for sending a message to a listening connector.
+   * @param cb A callback to be called when the message is received. Assumes that the message has
+   * been sent to another connector that replies to each message.
+   */
+  sendMessage(message: Message, cb?: () => {}) {
+    if (cb !== undefined) {
+      this._callbacks[message.id] = cb;
+    }
+    this._sendMessage(message);
   }
 
   /**
@@ -28,19 +41,33 @@ export abstract class Connector {
     };
   }
 
-  protected _handleMessage(message: Message) {
-    for (const listener of this._listeners) {
-      listener(message);
-    }
-  }
-
   /**
    * Custom logic for sending data to a receiver (e.g., sending to an editor over WebSockets, or
    * sending to Santoku through webview functions).
    */
-  abstract sendMessage(message: Message): void;
+  abstract _sendMessage(message: Message): void;
+
+  protected _handleMessage(message: Message) {
+    for (const listener of this._listeners) {
+      listener(message);
+    }
+    if (message.type === RECEIPT_MESSAGE) {
+      const receivedMessageId = message.data.received;
+      if (this._callbacks[receivedMessageId] !== undefined) {
+        this._callbacks[receivedMessageId]();
+        this._callbacks[receivedMessageId] = undefined;
+      }
+    } else {
+      this._sendReceiptMessage(message.id);
+    }
+  }
+
+  _sendReceiptMessage(receivedMessageId: MessageId) {
+    this._sendMessage(receiptMessage(receivedMessageId));
+  }
 
   abstract type: string;
+  private _callbacks: { [ messageId: string ]: () => {} } = {};
   private _listeners: ((message: Message) => void)[] = [];
 }
 

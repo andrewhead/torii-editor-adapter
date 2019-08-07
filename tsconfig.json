@@ -14,10 +14,10 @@
                 "node_modules/*",
                 "src/types/*"
             ]
-        },
+        }
     },
     "exclude": [
-      "**/test/**/*.test.ts",
+      "**/test/**/*.ts",
       "dist"
     ]
 }

@@ -20,7 +20,7 @@ export class WebSocketsEditorConnector extends EditorConnector {
     this._targetOrigin = targetOrigin;
   }
 
-  sendMessage(message: Message) {
+  _sendMessage(message: Message) {
     if (window !== undefined) {
       window.postMessage(message, this._targetOrigin);
     } else {
