@@ -1,15 +1,11 @@
 import configureStore from "redux-mock-store";
-import { actions } from "santoku-store";
 import { EditorAdapter } from "../src/editor-adapter";
 import { actionMessage, STATE_UPDATED_MESSAGE } from "../src/message";
-import { SimpleEditorAdapter, SimpleEditorConnector } from "./test-utils";
+import { simpleAction, SimpleEditorAdapter, SimpleEditorConnector } from "./test-utils";
 
 describe("EditorAdaptor", () => {
   it("dispatches actions to the store", () => {
-    const location = { path: "path", index: 0 };
-    const version = 0;
-    const text = "Updated text";
-    const action = actions.line.updateTextAtLocation(location, text, version);
+    const action = simpleAction();
     const message = actionMessage(action);
 
     const mockStore = configureStore([]);

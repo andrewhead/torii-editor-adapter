@@ -1,28 +1,36 @@
 import { Store } from "redux";
-import configureStore from 'redux-mock-store';
+import configureStore from "redux-mock-store";
+import { actions, SourcedRange, SourceType, testUtils } from "santoku-store";
+import {
+  Connector,
+  EditorConnector,
+  EDITOR_CONNECTOR,
+  MessageListenerSetup,
+  SANTOKU_CONNECTOR
+} from "../src/connector";
 import { EditorAdapter } from "../src/editor-adapter";
-import { EditorConnector, MessageListenerSetup, Connector, EDITOR_CONNECTOR, SANTOKU_CONNECTOR } from "../src/connector";
 import { Message, MessageId } from "../src/message";
-import { State } from "santoku-store";
 
-export function simpleMessage(messageId: MessageId) {
-  return { id: messageId, type: "test", data: {} };
+export function simpleAction() {
+  const range = {
+    start: { line: 1, character: 0 },
+    end: { line: 1, character: 1 },
+    path: "file-path",
+    relativeTo: { source: SourceType.REFERENCE_IMPLEMENTATION }
+  } as SourcedRange;
+  return actions.text.edit(range, "Updated text");
 }
 
-export function emptyState(): State {
-  return {
-    lineVersions: { allLineVersions: [], byId: {} },
-    lines: { allLines: [], byId: {} },
-    steps: { allSteps: [], byId: {} }
-  };
+export function simpleMessage(messageId: MessageId) {
+  return { id: messageId, type: "test", data: testUtils.createState() };
 }
 
 abstract class TestConnector extends Connector {
   constructor(listenerSetup?: MessageListenerSetup) {
     super(listenerSetup || (() => {}));
-    this.triggerIncomingMessage = (message) => {
+    this.triggerIncomingMessage = message => {
       this._handleMessage(message);
-    }
+    };
   }
 
   get lastSentMessage(): Message {
@@ -50,7 +58,6 @@ export class SimpleSantokuConnector extends TestConnector {
 }
 
 export class SimpleEditorAdapter extends EditorAdapter {
-
   constructor(store?: Store, connector?: EditorConnector) {
     store = store || configureStore([])({});
     super(store, connector || new SimpleEditorConnector());

@@ -1,7 +1,6 @@
 import { MessageListenerSetup } from "../src/connector";
-import { SimpleConnector, simpleMessage } from "./test-utils";
-import { AssertionError } from "assert";
 import { receiptMessage, RECEIPT_MESSAGE } from "../src/message";
+import { SimpleConnector, simpleMessage } from "./test-utils";
 
 class SimpleNotifier {
   onNotification(handler: () => void) {
@@ -16,15 +15,16 @@ class SimpleNotifier {
 }
 
 describe("Connector", () => {
-
   const notifier = new SimpleNotifier();
-  const listenerSetup: MessageListenerSetup = function (handleMessage) {
-    notifier.onNotification(() => { handleMessage(simpleMessage("message-id")) })
-  }
+  const listenerSetup: MessageListenerSetup = function(handleMessage) {
+    notifier.onNotification(() => {
+      handleMessage(simpleMessage("message-id"));
+    });
+  };
 
-  it("it forwards messages from listener setup function to subscribers", (done) => {
+  it("it forwards messages from listener setup function to subscribers", done => {
     const connector = new SimpleConnector(listenerSetup);
-    connector.subscribe((message) => {
+    connector.subscribe(message => {
       expect(message).toMatchObject({ id: "message-id" });
       done();
     });
@@ -34,7 +34,9 @@ describe("Connector", () => {
   it("unsubscribes listener", () => {
     const connector = new SimpleConnector(listenerSetup);
     let listenerCalled = false;
-    const unsubscribe = connector.subscribe(() => { listenerCalled = true; });
+    const unsubscribe = connector.subscribe(() => {
+      listenerCalled = true;
+    });
     unsubscribe();
     notifier.triggerNotification();
     expect(listenerCalled).toBe(false);
@@ -46,8 +48,8 @@ describe("Connector", () => {
     expect(connector.lastSentMessage).toMatchObject({
       type: RECEIPT_MESSAGE,
       data: { received: "sent-message-id" }
-    })
-  })
+    });
+  });
 
   it("calls a callback when a message is received", () => {
     const connector = new SimpleConnector();

@@ -1,4 +1,4 @@
-import { Message, RECEIPT_MESSAGE, receiptMessage, MessageId } from "./message";
+import { Message, MessageId, receiptMessage, RECEIPT_MESSAGE } from "./message";
 
 export type MessageListener = (message: Message) => void;
 export type MessageListenerSetup = (handleMessage: (message: Message) => void) => void;
@@ -67,7 +67,7 @@ export abstract class Connector {
   }
 
   abstract type: string;
-  private _callbacks: { [ messageId: string ]: () => {} } = {};
+  private _callbacks: { [messageId: string]: () => {} } = {};
   private _listeners: ((message: Message) => void)[] = [];
 }
 
