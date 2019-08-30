@@ -1,6 +1,6 @@
 import { Store } from "redux";
 import configureStore from "redux-mock-store";
-import { actions, SourcedRange, SourceType, testUtils } from "santoku-store";
+import { actions, SourcedRange, SourceType, stateUtils } from "santoku-store";
 import {
   Connector,
   EditorConnector,
@@ -18,11 +18,11 @@ export function simpleAction() {
     path: "file-path",
     relativeTo: { source: SourceType.REFERENCE_IMPLEMENTATION }
   } as SourcedRange;
-  return actions.text.edit(range, "Updated text");
+  return actions.code.edit(range, "Updated text");
 }
 
 export function simpleMessage(messageId: MessageId) {
-  return { id: messageId, type: "test", data: testUtils.createState() };
+  return { id: messageId, type: "test", data: stateUtils.createState() };
 }
 
 abstract class TestConnector extends Connector {

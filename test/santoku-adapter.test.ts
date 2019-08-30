@@ -1,4 +1,4 @@
-import { testUtils } from "santoku-store";
+import { stateUtils } from "santoku-store";
 import { ACTION_MESSAGE, stateUpdateMessage } from "../src/message";
 import { SantokuAdapter } from "../src/santoku-adapter";
 import { simpleAction, SimpleSantokuConnector } from "./test-utils";
@@ -7,7 +7,7 @@ describe("SantokuAdapter", () => {
   it("notifies listeners of state changes", done => {
     const connector = new SimpleSantokuConnector();
     const adapter = new SantokuAdapter(connector);
-    const updatedState = testUtils.createState();
+    const updatedState = stateUtils.createState();
     adapter.subscribe(state => {
       expect(state).toEqual(updatedState);
       done();
