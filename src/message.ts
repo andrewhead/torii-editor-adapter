@@ -131,3 +131,8 @@ export enum EditorRequestType {
 export interface EmptyMessage extends BaseMessage<Object> {
   type: typeof EMPTY_MESSAGE;
 }
+
+const requests = {
+  insertSnippetRequest
+};
+export { requests };
