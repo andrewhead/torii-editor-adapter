@@ -1,16 +1,15 @@
-import { WebSocketsEditorConnector } from "./websockets-editor-connector";
 import { Message } from "./message";
+import { WebSocketsEditorConnector } from "./websockets-editor-connector";
 
 /**
  * Type declaration of VS Code API embedded in a webview's HTML. See
  * https://code.visualstudio.com/api/extension-guides/webview#passing-messages-from-a-webview-to-an-extension
  */
 interface VsCodeApi {
-  postMessage: (data: any) => {}
+  postMessage: (data: any) => {};
 }
 
 export class VsCodeWebviewEditorConnector extends WebSocketsEditorConnector {
-
   constructor(vsCodeApi: VsCodeApi) {
     /**
      * The target origin doesn't matter, as this connector won't be sending messages through web

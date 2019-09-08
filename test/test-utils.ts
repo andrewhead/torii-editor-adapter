@@ -1,6 +1,6 @@
 import { Store } from "redux";
 import configureStore from "redux-mock-store";
-import { actions, SourcedRange, SourceType, stateUtils } from "santoku-store";
+import { actions, SourcedRange, SourceType } from "santoku-store";
 import {
   Connector,
   EditorConnector,
@@ -9,7 +9,7 @@ import {
   SANTOKU_CONNECTOR
 } from "../src/connector";
 import { EditorAdapter } from "../src/editor-adapter";
-import { Message, MessageId } from "../src/message";
+import { EMPTY_MESSAGE, Message, MessageId } from "../src/message";
 
 export function simpleAction() {
   const range = {
@@ -21,8 +21,8 @@ export function simpleAction() {
   return actions.code.edit(range, "Updated text");
 }
 
-export function simpleMessage(messageId: MessageId) {
-  return { id: messageId, type: "test", data: stateUtils.createState() };
+export function simpleMessage(messageId: MessageId): Message {
+  return { id: messageId, type: EMPTY_MESSAGE, data: {} };
 }
 
 abstract class TestConnector extends Connector {

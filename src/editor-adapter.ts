@@ -1,6 +1,12 @@
 import { Store } from "redux";
 import { EditorConnector } from "./connector";
-import { ACTION_MESSAGE, Message, stateUpdateMessage } from "./message";
+import {
+  ACTION_MESSAGE,
+  EditorRequest,
+  editorRequestMessage,
+  Message,
+  stateUpdateMessage
+} from "./message";
 
 /**
  * Adapter for sending and receiving messages with a code editor. Receives messages and converts
@@ -10,14 +16,18 @@ export class EditorAdapter {
   /**
    * @param connector Connector that sends messages to and receives messages from the editor.
    */
-  constructor(
-    store: Store,
-    connector: EditorConnector
-  ) {
+  constructor(store: Store, connector: EditorConnector) {
     this._store = store;
     this._store.subscribe(this._reportStateUpdate.bind(this));
     this._connector = connector;
     this._connector.subscribe(this._onMessageReceived.bind(this));
+  }
+
+  /**
+   * Request that the editor takes an action.
+   */
+  request(request: EditorRequest) {
+    this._connector.sendMessage(editorRequestMessage(request));
   }
 
   private _reportStateUpdate() {

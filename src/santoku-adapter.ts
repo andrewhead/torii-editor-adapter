@@ -1,16 +1,28 @@
 import { actions, State } from "santoku-store";
 import { SantokuConnector } from "./connector";
-import { actionMessage, Message, STATE_UPDATED_MESSAGE } from "./message";
+import {
+  actionMessage,
+  EditorRequest,
+  EDITOR_REQUEST_MESSAGE,
+  Message,
+  STATE_UPDATED_MESSAGE
+} from "./message";
 
 export type StateChangeListener = (state: State) => void;
+export type RequestListener = (request: EditorRequest) => void;
 
 /**
  * Adapter for sending and receiving messages with Santoku. Receives messages and packages them
  * into an updated state for an editor to render. Reports actions from the editor.
  *
- * The SantokuAdapter is just a waypoint for accessing the Santoku Redux store. The API for
+ * The SantokuAdapter is primarily a waypoint for accessing the Santoku Redux store. The API for
  * the adapter, once initialized, is the same as the Redux store API (for example, with
  * 'dispatch', 'subscribe', and 'getState()).
+ *
+ * The adapter is also responsible for listening for requests that the editor takes action.
+ * Santoku offers user interface affordances that can only be provided with help from the editor.
+ * An editor that connects to Santoku should be ready to respond to all of the requests defined
+ * as 'EditorRequest' types in 'message.ts'.
  */
 export class SantokuAdapter {
   /**
@@ -35,6 +47,16 @@ export class SantokuAdapter {
     };
   }
 
+  onRequestReceived(listener: RequestListener) {
+    this._requestListeners.push(listener);
+    return () => {
+      const index = this._requestListeners.indexOf(listener);
+      if (index !== -1) {
+        this._requestListeners.splice(index, 1);
+      }
+    };
+  }
+
   getState(): State | undefined {
     return this._state;
   }
@@ -45,10 +67,16 @@ export class SantokuAdapter {
       for (const listener of this._stateChangeListeners) {
         listener(message.data);
       }
+    } else if (message.type === EDITOR_REQUEST_MESSAGE) {
+      const request = message.data;
+      for (const listener of this._requestListeners) {
+        listener(request);
+      }
     }
   }
 
   private _state: State | undefined;
   private _stateChangeListeners: StateChangeListener[] = [];
+  private _requestListeners: RequestListener[] = [];
   private _connector: SantokuConnector;
 }

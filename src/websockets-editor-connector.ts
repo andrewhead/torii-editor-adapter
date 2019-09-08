@@ -2,11 +2,11 @@ import { EditorConnector } from "./connector";
 import { Message } from "./message";
 
 export function setupWebSocketsListener(handleMessage: (message: Message) => void) {
-  window.addEventListener("message", (event) => {
+  window.addEventListener("message", event => {
     const message = event.data as Message;
     handleMessage(message);
   });
-};
+}
 
 export class WebSocketsEditorConnector extends EditorConnector {
   /**

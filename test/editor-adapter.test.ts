@@ -1,6 +1,11 @@
 import configureStore from "redux-mock-store";
 import { EditorAdapter } from "../src/editor-adapter";
-import { actionMessage, STATE_UPDATED_MESSAGE } from "../src/message";
+import {
+  actionMessage,
+  EDITOR_REQUEST_MESSAGE,
+  insertSnippetRequest,
+  STATE_UPDATED_MESSAGE
+} from "../src/message";
 import { simpleAction, SimpleEditorAdapter, SimpleEditorConnector } from "./test-utils";
 
 describe("EditorAdaptor", () => {
@@ -20,7 +25,7 @@ describe("EditorAdaptor", () => {
   it("reports state changes", () => {
     const mockStore = configureStore([]);
     const store = mockStore({ field: "value" });
-    let connector = new SimpleEditorConnector();
+    const connector = new SimpleEditorConnector();
     new EditorAdapter(store, connector);
     store.dispatch({ type: "noop-action" });
     expect(connector.lastSentMessage).toMatchObject({
@@ -28,6 +33,15 @@ describe("EditorAdaptor", () => {
       data: {
         field: "value"
       }
+    });
+  });
+
+  it("sends editor requests", () => {
+    const connector = new SimpleEditorConnector();
+    const adapter = new SimpleEditorAdapter(undefined, connector);
+    adapter.request(insertSnippetRequest());
+    expect(connector.lastSentMessage).toMatchObject({
+      type: EDITOR_REQUEST_MESSAGE
     });
   });
 });
