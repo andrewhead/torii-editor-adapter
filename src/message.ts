@@ -132,7 +132,6 @@ export interface EmptyMessage extends BaseMessage<Object> {
   type: typeof EMPTY_MESSAGE;
 }
 
-const requests = {
+export const requests = {
   insertSnippetRequest
 };
-export { requests };
