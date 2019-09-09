@@ -63,10 +63,19 @@ export interface StateUpdateMessage extends BaseMessage<State> {
 }
 
 export function stateUpdateMessage(state: State): StateUpdateMessage {
+  const minimalState = {
+    ...state,
+    outputs: { all: [], byId: {} },
+    undoable: {
+      ...state.undoable,
+      past: [],
+      future: []
+    }
+  };
   return {
     id: messageId(),
     type: STATE_UPDATED_MESSAGE,
-    data: state
+    data: minimalState
   };
 }
 

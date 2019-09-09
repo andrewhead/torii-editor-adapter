@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Store } from "redux";
 import { EditorConnector } from "./connector";
 import {
@@ -21,6 +22,10 @@ export class EditorAdapter {
     this._store.subscribe(this._reportStateUpdate.bind(this));
     this._connector = connector;
     this._connector.subscribe(this._onMessageReceived.bind(this));
+    this._throttledSendMessage = _.throttle(
+      this._connector._sendMessage.bind(this._connector),
+      100
+    );
   }
 
   /**
@@ -31,11 +36,7 @@ export class EditorAdapter {
   }
 
   private _reportStateUpdate() {
-    this._sendEvent(stateUpdateMessage(this._store.getState()));
-  }
-
-  private _sendEvent(message: Message) {
-    this._connector.sendMessage(message);
+    this._throttledSendMessage(stateUpdateMessage(this._store.getState()));
   }
 
   /**
@@ -47,6 +48,7 @@ export class EditorAdapter {
     }
   }
 
+  private _throttledSendMessage: (message: Message) => void;
   private _store: Store;
   private _connector: EditorConnector;
 }
