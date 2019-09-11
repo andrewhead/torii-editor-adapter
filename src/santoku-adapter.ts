@@ -1,4 +1,5 @@
-import { actions, State } from "santoku-store";
+import _ from "lodash";
+import { actions, isOutputAction, State } from "santoku-store";
 import { SantokuConnector } from "./connector";
 import {
   actionMessage,
@@ -31,10 +32,26 @@ export class SantokuAdapter {
   constructor(connector: SantokuConnector) {
     this._connector = connector;
     this._connector.subscribe(this._onMessageReceived.bind(this));
+    this._dispatchOutputActions = _.throttle(function() {
+      if (this._outputActions.length > 0) {
+        const action = actions.outputs.applyUpdates(...this._outputActions);
+        this._outputActions = [];
+        this._connector.sendMessage(actionMessage(action));
+      }
+    }, 500);
   }
 
   dispatch(action: actions.Type.Any, cb?: () => {}) {
-    this._connector.sendMessage(actionMessage(action), cb);
+    if (isOutputAction(action)) {
+      this._dispatchOutputAction(action);
+    } else {
+      this._connector.sendMessage(actionMessage(action), cb);
+    }
+  }
+
+  private _dispatchOutputAction(action: actions.Type.Outputs) {
+    this._outputActions.push(action);
+    this._dispatchOutputActions();
   }
 
   subscribe(listener: StateChangeListener) {
@@ -78,5 +95,7 @@ export class SantokuAdapter {
   private _state: State | undefined;
   private _stateChangeListeners: StateChangeListener[] = [];
   private _requestListeners: RequestListener[] = [];
+  private _outputActions: OutputActionTypes[] = [];
+  private _dispatchOutputActions;
   private _connector: SantokuConnector;
 }
