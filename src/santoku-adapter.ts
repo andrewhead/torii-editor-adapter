@@ -95,7 +95,7 @@ export class SantokuAdapter {
   private _state: State | undefined;
   private _stateChangeListeners: StateChangeListener[] = [];
   private _requestListeners: RequestListener[] = [];
-  private _outputActions: OutputActionTypes[] = [];
+  private _outputActions: actions.Type.Outputs[] = [];
   private _dispatchOutputActions;
   private _connector: SantokuConnector;
 }
