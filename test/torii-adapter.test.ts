@@ -6,13 +6,13 @@ import {
   insertSnippetRequest,
   stateUpdateMessage
 } from "../src/message";
-import { SantokuAdapter } from "../src/santoku-adapter";
-import { simpleAction, SimpleSantokuConnector } from "./test-utils";
+import { ToriiAdapter } from "../src/torii-adapter";
+import { simpleAction, SimpleToriiConnector } from "./test-utils";
 
-describe("SantokuAdapter", () => {
+describe("ToriiAdapter", () => {
   it("notifies listeners of state changes", done => {
-    const connector = new SimpleSantokuConnector();
-    const adapter = new SantokuAdapter(connector);
+    const connector = new SimpleToriiConnector();
+    const adapter = new ToriiAdapter(connector);
     const updatedState = stateUtils.createState();
     adapter.subscribe(state => {
       expect(state).toEqual(updatedState);
@@ -24,8 +24,8 @@ describe("SantokuAdapter", () => {
   });
 
   it("notifies listeners of requests", done => {
-    const connector = new SimpleSantokuConnector();
-    const adapter = new SantokuAdapter(connector);
+    const connector = new SimpleToriiConnector();
+    const adapter = new ToriiAdapter(connector);
     adapter.onRequestReceived(request => {
       expect(request).toEqual({
         type: EditorRequestType.INSERT_SNIPPET,
@@ -39,8 +39,8 @@ describe("SantokuAdapter", () => {
   });
 
   it("dispatches actions through the connector", () => {
-    const connector = new SimpleSantokuConnector();
-    const adapter = new SantokuAdapter(connector);
+    const connector = new SimpleToriiConnector();
+    const adapter = new ToriiAdapter(connector);
     const action = simpleAction();
     adapter.dispatch(action);
     expect(connector.lastSentMessage).toMatchObject({

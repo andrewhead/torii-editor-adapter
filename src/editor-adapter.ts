@@ -11,7 +11,7 @@ import {
 
 /**
  * Adapter for sending and receiving messages with a code editor. Receives messages and converts
- * them into changes in Santoku's state. Reports changes to Santoku's state.
+ * them into changes in Torii's state. Reports changes to Torii's state.
  */
 export class EditorAdapter {
   /**

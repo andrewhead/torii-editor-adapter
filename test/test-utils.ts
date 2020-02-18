@@ -6,7 +6,7 @@ import {
   EditorConnector,
   EDITOR_CONNECTOR,
   MessageListenerSetup,
-  SANTOKU_CONNECTOR
+  TORII_CONNECTOR
 } from "../src/connector";
 import { EditorAdapter } from "../src/editor-adapter";
 import { EMPTY_MESSAGE, Message, MessageId } from "../src/message";
@@ -53,8 +53,8 @@ export class SimpleEditorConnector extends TestConnector {
   type: typeof EDITOR_CONNECTOR;
 }
 
-export class SimpleSantokuConnector extends TestConnector {
-  type: typeof SANTOKU_CONNECTOR;
+export class SimpleToriiConnector extends TestConnector {
+  type: typeof TORII_CONNECTOR;
 }
 
 export class SimpleEditorAdapter extends EditorAdapter {

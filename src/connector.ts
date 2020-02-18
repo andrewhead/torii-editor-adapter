@@ -1,11 +1,13 @@
 import { Message, MessageId, receiptMessage, RECEIPT_MESSAGE } from "./message";
 
 export type MessageListener = (message: Message) => void;
-export type MessageListenerSetup = (handleMessage: (message: Message) => void) => void;
+export type MessageListenerSetup = (
+  handleMessage: (message: Message) => void
+) => void;
 export type Subscription = () => void;
 
 /**
- * Connector that enables communication between editor and Santoku. Sends receipts whenever a
+ * Connector that enables communication between editor and Torii. Sends receipts whenever a
  * message that it receives has been handled.
  * @param messageListenerSetup custom logic to set up listener for receiving messages from a sender
  * (e.g., listen to WebSockets, or to a callback from a webview). Should decode the message into
@@ -43,7 +45,7 @@ export abstract class Connector {
 
   /**
    * Custom logic for sending data to a receiver (e.g., sending to an editor over WebSockets, or
-   * sending to Santoku through webview functions).
+   * sending to Torii through webview functions).
    */
   abstract _sendMessage(message: Message): void;
 
@@ -72,18 +74,18 @@ export abstract class Connector {
 }
 
 export const EDITOR_CONNECTOR = "EDITOR_CONNECTOR";
-export const SANTOKU_CONNECTOR = "SANTOKU_CONNECTOR";
+export const TORII_CONNECTOR = "TORII_CONNECTOR";
 
 /**
- * A connector that communicates with an editor from Santoku.
+ * A connector that communicates with an editor from Torii.
  */
 export abstract class EditorConnector extends Connector {
   type: typeof EDITOR_CONNECTOR;
 }
 
 /**
- * A connector that communicates with Santoku from an editor.
+ * A connector that communicates with Torii from an editor.
  */
-export abstract class SantokuConnector extends Connector {
-  type: typeof SANTOKU_CONNECTOR;
+export abstract class ToriiConnector extends Connector {
+  type: typeof TORII_CONNECTOR;
 }

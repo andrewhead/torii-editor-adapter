@@ -1,7 +1,9 @@
 import { EditorConnector } from "./connector";
 import { Message } from "./message";
 
-export function setupWebSocketsListener(handleMessage: (message: Message) => void) {
+export function setupWebSocketsListener(
+  handleMessage: (message: Message) => void
+) {
   window.addEventListener("message", event => {
     const message = event.data as Message;
     handleMessage(message);
@@ -11,7 +13,7 @@ export function setupWebSocketsListener(handleMessage: (message: Message) => voi
 export class WebSocketsEditorConnector extends EditorConnector {
   /**
    * @param targetOrigin origin of the site to which a message will be dispatched. Only specify
-   * '*' (all targets) if you have control over the environment in which Santoku is getting run
+   * '*' (all targets) if you have control over the environment in which Torii is getting run
    * (i.e. it's getting run in an IDE, not a browser. See the targetOrigin parameter description on
    * MDN https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
    */

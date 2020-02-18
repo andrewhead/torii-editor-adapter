@@ -8,7 +8,7 @@ export const EDITOR_REQUEST_MESSAGE = "EDITOR_REQUEST";
 export const EMPTY_MESSAGE = "EMPTY";
 
 /**
- * Message sent from Santoku to the editor, or vice versa.
+ * Message sent from Torii to the editor, or vice versa.
  */
 export type Message =
   | ActionMessage
@@ -80,7 +80,7 @@ export function stateUpdateMessage(state: State): StateUpdateMessage {
 }
 
 /**
- * An editor can submit requests to perform actions on Santoku's store. In this case, the data
+ * An editor can submit requests to perform actions on Torii's store. In this case, the data
  * for the message is an action, created using the action creators.
  */
 export interface ActionMessage extends BaseMessage<actions.Type.Any> {
@@ -96,7 +96,7 @@ export function actionMessage(action: actions.Type.Any): ActionMessage {
 }
 
 /**
- * A message that requests that the editor take action. Used for forwarding UI events in Santoku
+ * A message that requests that the editor take action. Used for forwarding UI events in Torii
  * to handlers that make actions or change presentation in the editor.
  */
 export interface EditorRequestMessage extends BaseMessage<EditorRequest> {
