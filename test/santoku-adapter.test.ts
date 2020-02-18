@@ -1,4 +1,4 @@
-import { stateUtils } from "santoku-store";
+import { stateUtils } from "torii-store";
 import {
   ACTION_MESSAGE,
   editorRequestMessage,
@@ -43,6 +43,9 @@ describe("SantokuAdapter", () => {
     const adapter = new SantokuAdapter(connector);
     const action = simpleAction();
     adapter.dispatch(action);
-    expect(connector.lastSentMessage).toMatchObject({ type: ACTION_MESSAGE, data: action });
+    expect(connector.lastSentMessage).toMatchObject({
+      type: ACTION_MESSAGE,
+      data: action
+    });
   });
 });

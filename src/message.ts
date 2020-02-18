@@ -1,4 +1,4 @@
-import { actions, State } from "santoku-store";
+import { actions, State } from "torii-store";
 import uuidv4 from "uuid/v4";
 
 export const ACTION_MESSAGE = "ACTION";
@@ -104,7 +104,9 @@ export interface EditorRequestMessage extends BaseMessage<EditorRequest> {
   data: EditorRequest;
 }
 
-export function editorRequestMessage(request: EditorRequest): EditorRequestMessage {
+export function editorRequestMessage(
+  request: EditorRequest
+): EditorRequestMessage {
   return {
     id: messageId(),
     type: EDITOR_REQUEST_MESSAGE,

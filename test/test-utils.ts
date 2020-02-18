@@ -1,6 +1,6 @@
 import { Store } from "redux";
 import configureStore from "redux-mock-store";
-import { actions, SourcedRange, SourceType } from "santoku-store";
+import { actions, SourcedRange, SourceType } from "torii-store";
 import {
   Connector,
   EditorConnector,

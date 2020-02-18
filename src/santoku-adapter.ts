@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { actions, isOutputAction, State } from "santoku-store";
+import { actions, isOutputAction, State } from "torii-store";
 import { SantokuConnector } from "./connector";
 import {
   actionMessage,
