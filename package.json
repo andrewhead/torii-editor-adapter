@@ -1,13 +1,16 @@
 {
   "name": "torii-editor-adapter",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Adapter between Torii tutorial editor and a code editor",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest --forceExit --coverage --verbose"
+    "test": "jest --forceExit --coverage --verbose",
+    "prepare": "npm build",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
